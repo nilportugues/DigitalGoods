@@ -1,9 +1,10 @@
-import { Component } from "react";
-import Link from "next/link";
-import Layout from '../components/layout'
+import { Component } from 'react';
+import Link from 'next/link';
+import Layout from '../components/layout';
+
 class Error extends Component {
   static getInitialProps() {
-    const isServer = typeof window === "undefined";
+    const isServer = typeof window === 'undefined';
     return { isServer };
   }
 
@@ -12,12 +13,10 @@ class Error extends Component {
       <Layout>
         <section>
           <p>
-            This is error page of the SSR example, you accessed it{" "}
-            <strong>{this.props.isServer ? "server" : "client"} side</strong>.
+            This is error page of the SSR example, you accessed it{' '}
+            <strong>{this.props.isServer ? 'server' : 'client'} side</strong>.
           </p>
-          <p>
-            You can reload to see how the page change.
-          </p>
+          <p>You can reload to see how the page change.</p>
           <Link href="/">
             <a>Go to Home</a>
           </Link>

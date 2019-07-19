@@ -6,7 +6,9 @@
   "scripts": {
     "start": "next start",
     "dev": "node server.js",
-    "build": "next build"
+    "build": "next build",
+    "lint": "eslint --fix --ext .js pages components",
+    "lint:watch": "esw -w --fix components pages"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.18",
@@ -16,8 +18,19 @@
     "@zeit/next-sass": "^1.0.1",
     "aws-amplify": "^1.1.28",
     "axios": "^0.18.0",
+    "babel-eslint": "^10.0.1",
     "bulma": "^0.7.5",
     "es6-promise": "^4.2.6",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^4.3.0",
+    "eslint-import-resolver-webpack": "^0.11.1",
+    "eslint-loader": "^2.1.2",
+    "eslint-plugin-flowtype": "^3.9.1",
+    "eslint-plugin-import": "^2.17.3",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-react": "^7.13.0",
     "express": "^4.17.1",
     "formik": "^1.5.7",
     "i": "^0.3.6",
@@ -30,6 +43,7 @@
     "node-sass": "^4.12.0",
     "npm": "^6.9.0",
     "path-match": "^1.2.4",
+    "prettier": "^1.17.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-helmet": "^5.2.1",

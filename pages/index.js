@@ -1,22 +1,18 @@
-import React from 'react'
-import Link from "next/link";
-import Header from "../components/header";
-import { connect } from 'react-redux'
-import { inputChange } from '../actions'
-import Layout from '../components/layout'
+import React from 'react';
+import Link from 'next/link';
+import { connect } from 'react-redux';
+import Layout from '../components/layout';
 
 class Index extends React.Component {
-  static async getInitialProps (props) {
-    const { store, isServer } = props.ctx
+  static async getInitialProps(props) {
+    const { isServer } = props.ctx;
 
-    return { isServer }
+    return { isServer };
   }
 
-  componentDidMount () {
+  componentDidMount() {}
 
-  }
-
-  render () {
+  render() {
     return (
       <Layout>
         <section className="section">
@@ -25,11 +21,10 @@ class Index extends React.Component {
               <a>Go to About Me</a>
             </Link>
           </div>
-
         </section>
       </Layout>
     );
   }
 }
 
-export default connect()(Index)
+export default connect()(Index);
