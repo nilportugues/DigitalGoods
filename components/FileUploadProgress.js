@@ -6,6 +6,7 @@ import { Cancel } from '@material-ui/icons';
 import Auth from '@aws-amplify/auth';
 import Storage from '@aws-amplify/storage';
 import awsconfig from '../aws-exports';
+import { createIdentificationRecord } from '../apis/User';
 
 Auth.configure(awsconfig);
 Storage.configure(awsconfig);
@@ -100,12 +101,25 @@ class FileUploadProgress extends React.Component {
     return array;
   };
 
+  validateSize = file => {
+    const FileSize = file.size / 1024 / 1024; // in MB
+    if (FileSize > 2) {
+      return false;
+    }
+    return true;
+  };
+
   doUpload = () => {
     const file = this.state.files[0];
+    const isFileUnderSizeLimit = this.validateSize(file);
+    if (isFileUnderSizeLimit === false) {
+      alert('File size exceeds 2 MB');
+      return;
+    }
 
     Auth.currentSession()
       .then(data => {
-        Storage.put(file.name, file, {
+        Storage.put(`identification/${file.name}`, file, {
           level: 'private',
           contentType: 'image/*',
           progressCallback(e) {
@@ -117,12 +131,13 @@ class FileUploadProgress extends React.Component {
           }
         })
           .then(result => {
-            console.log(result);
+            createIdentificationRecord(result.key);
+          })
+          .then(result => {
             this.setState({
               hasError: false,
               progress: 100
             });
-
             setTimeout(() => {
               this.props.onSuccess(file.name);
             }, 1000);

@@ -59,7 +59,7 @@ class Signup extends Component {
       },
       validationData: [] // optional
     })
-      .then(data => {
+      .then(() => {
         // Encrypt
         const ciphertext = CryptoJS.AES.encrypt(
           JSON.stringify({ email, password }),

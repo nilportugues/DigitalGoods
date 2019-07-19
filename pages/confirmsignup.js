@@ -58,29 +58,37 @@ class ConfirmSignUp extends Component {
           username,
           password
         })
-          .then(user => {
-            localStorage.setItem('user', JSON.stringify(user.attributes));
+          .then(() => {
+            Auth.currentUserInfo()
+              .then(user => {
+                localStorage.setItem('user', JSON.stringify(user.attributes));
+                toast.success('Confirm Code success!');
 
-            toast.success('Confirm Code success!');
-
-            doCreateUser({
-              membership_type: -1,
-              user_name: user.username,
-              email: user.attributes.email,
-              first_name: user.attributes.given_name,
-              last_name: user.attributes.family_name
-            })
-              .then(() => {
-                this.setState({ loading: false });
-
-                Router.push(`/dashboard`);
+                doCreateUser({
+                  cognito_id: user.id,
+                  email: user.attributes.email,
+                  first_name: user.attributes.family_name,
+                  last_name: user.attributes.given_name
+                })
+                  .then(() => {
+                    this.setState({ loading: false });
+                    Router.push(`/dashboard`);
+                  })
+                  .catch(() => {
+                    this.setState({ loading: false });
+                    Auth.signOut();
+                    Router.push(`/signin`);
+                  });
               })
               .catch(() => {
                 this.setState({ loading: false });
+                Auth.signOut();
+                Router.push(`/signin`);
               });
           })
           .catch(() => {
             this.setState({ loading: false });
+            Router.push(`/signin`);
           });
       })
       .catch(() => {

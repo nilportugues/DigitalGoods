@@ -5,9 +5,11 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import Link from 'next/link';
 import Auth from '@aws-amplify/auth';
+import CryptoJS from 'crypto-js';
 import Layout from '../components/layout';
 import Loader from '../components/Loader';
 import awsconfig from '../aws-exports';
+import { doGetUser, doCreateUser } from '../apis/User';
 
 Auth.configure(awsconfig);
 
@@ -41,22 +43,29 @@ class SignIn extends Component {
       username: email, // Required, the username
       password // Optional, the password
     })
-      .then(user => {
-        toast.success('Sign In Success!');
-
-        // save user data
-        localStorage.setItem('user', JSON.stringify(user.attributes));
-
-        this.setState({ loading: false });
-        Router.push(`/dashboard`);
-      })
-      .catch(err => {
+    .then(user => {
+      toast.success('Sign In Success!');
+      doGetUser(user.username)
+    })
+    .then((userInfo) => {
+      localStorage.setItem('user', JSON.stringify(userInfo));
+      this.setState({ loading: false });
+      Router.push(`/dashboard`);
+    })
+    .catch(err => {
         this.setState({ loading: false });
         if (err.code === 'UserNotConfirmedException') {
           // The error happens if the user didn't finish the confirmation step when signing up
           // In this case you need to resend the code and confirm the user
           // About how to resend the code and confirm the user, please check the signUp part
-          Router.push(`/confirmsignup/${email}/${password}`);
+          const ciphertext = CryptoJS.AES.encrypt(
+            JSON.stringify({ email, password }),
+            process.env.SECRET_KEY_CRYPTO
+          );
+
+          Router.push(
+            `/confirmsignup/${encodeURIComponent(ciphertext.toString())}`
+          );
         } else if (err.code === 'PasswordResetRequiredException') {
           // The error happens when the password is reset in the Cognito console
           // In this case you need to call forgotPassword to reset the password
@@ -71,7 +80,15 @@ class SignIn extends Component {
         } else {
           toast.error('Internal server error!');
         }
-      });
+    })
+    .catch((err) => {
+      console.log(err);
+      this.setState({ loading: false });
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      Auth.signOut();
+      toast.error('Internal server error!');
+    });
   };
 
   render() {

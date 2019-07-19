@@ -9,12 +9,19 @@ class AxiosConfig {
   static init() {
     axios.interceptors.request.use(config => {
       const token = localStorage.getItem('token');
-      if (token) {
+      const noUseToken = localStorage.getItem('noUseToken');
+      const configData = config;
+      if (token && !noUseToken) {
+        console.log('---------')
         // eslint-disable-next-line no-param-reassign
-        config.headers.common.Authorization = `Bearer ${token}`;
+        configData.headers.common.Authorization = `Bearer ${token}`;
+      } else {
+        console.log('``````````')
+        delete configData.headers.common.Authorization;
       }
 
-      return config;
+      console.log(configData)
+      return configData;
     });
 
     axios.interceptors.request.use(null, error => {

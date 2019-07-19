@@ -6,7 +6,7 @@ import withReduxSaga from 'next-redux-saga';
 import { ToastContainer } from 'react-toastify';
 import AxiosConfig from '../constants/AxiosConfig';
 import '../styles/styles.scss';
-import createStore from '../store';
+import createstore from '../store';
 import 'react-toastify/dist/ReactToastify.css';
 
 class MyApp extends App {
@@ -38,4 +38,4 @@ class MyApp extends App {
   }
 }
 
-export default withRedux(createStore)(withReduxSaga(MyApp));
+export default withRedux(createstore)(withReduxSaga(MyApp));

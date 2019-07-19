@@ -1,27 +1,37 @@
+/* eslint-disable import/no-cycle */
 /* global fetch */
 
-import { all, call, delay, put, take, takeLatest } from 'redux-saga/effects'
-import es6promise from 'es6-promise'
-import 'isomorphic-unfetch'
+import {
+  all,
+  call,
+  delay,
+  put,
+  take,
+  takeLatest,
+  takeEvery
+} from 'redux-saga/effects';
+import es6promise from 'es6-promise';
+import 'isomorphic-unfetch';
 
-import { inputChange } from './actions'
+import {
+  INCREASE_FILE_INDEX,
+  CANCEL_ALL_UPLOAD,
+  CANCEL_UPLOAD
+} from './constants';
+import {
+  startUploadVideo,
+  cancelUploadProduct,
+  cancelAllUpload
+} from './sagas/products';
 
-es6promise.polyfill()
+es6promise.polyfill();
 
-function * loadDataSaga () {
-  try {
-    const res = yield fetch('https://jsonplaceholder.typicode.com/users')
-    const data = yield res.json()
-    yield put(loadDataSuccess(data))
-  } catch (err) {
-    yield put(failure(err))
-  }
-}
-
-function * rootSaga () {
+function* rootSaga() {
   yield all([
-    takeLatest(inputChange, loadDataSaga)
-  ])
+    takeEvery(INCREASE_FILE_INDEX, startUploadVideo),
+    takeEvery(CANCEL_ALL_UPLOAD, cancelAllUpload),
+    takeEvery(CANCEL_UPLOAD, cancelUploadProduct)
+  ]);
 }
 
-export default rootSaga
+export default rootSaga;

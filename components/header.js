@@ -46,6 +46,7 @@ class Header extends Component {
   signout = () => {
     Auth.signOut();
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     this.setState({ signin: false });
     Router.push('/signin');
   };
@@ -224,7 +225,7 @@ class Header extends Component {
                     </Link>
                   </p>
                   <p className="control">
-                    <Link href="#">
+                    <Link href="/signin">
                       <button
                         type="button"
                         className="button"

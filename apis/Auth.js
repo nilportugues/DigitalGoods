@@ -1,3 +1,7 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-undef */
+/* eslint-disable no-loop-func */
+
 import Auth from '@aws-amplify/auth';
 import awsconfig from '../aws-exports';
 

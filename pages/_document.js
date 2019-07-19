@@ -18,6 +18,10 @@ class MyDocument extends Document {
             rel="stylesheet"
             type="text/css"
           />
+          <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet"
+          ></link>
         </Head>
         <body>
           <Main />

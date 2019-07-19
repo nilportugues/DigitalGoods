@@ -12,13 +12,7 @@
 
 @font-face {
     font-family: 'SF-Pro-Text';
-    src: url('/static/SF-Pro-Text-Medium.otf');
-    font-weight: medium; 
-}
-
-@font-face {
-    font-family: 'SF-Pro-Text';
-    src: url('/static/SF-Pro-Text-Medium.otf');
+    src: url('/static/SF-Pro-Text-Regular.otf');
     font-weight: normal; 
 }
 
@@ -31,5 +25,11 @@
 @font-face {
     font-family: 'SF-Pro-Text';
     src: url('/static/SF-Pro-Text-Light.otf');
-    font-weight: 100; 
+    font-weight: 100;
+}
+
+@font-face {
+    font-family: 'SF-Pro-Text';
+    src: url('/static/SF-Pro-Text-Regular.otf');
+    font-weight: regular;
 }

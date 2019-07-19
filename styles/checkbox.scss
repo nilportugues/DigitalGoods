@@ -1,0 +1,51 @@
+
+$brand: $primary;
+$checkboxSize: 20px;
+$checkedBG: $primary;
+$checkedColor: white;
+$disabledBG: gray;
+
+.React__checkbox {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    min-width: 100px;
+}
+
+.React__checkbox--input {
+    display: none;
+  }
+  
+  .React__checkbox--input {
+    + span {
+      color: red;
+      display: flex;
+      width: $checkboxSize;
+      height: $checkboxSize;
+      background: transparent;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      margin: 5px;
+      border: 1px solid $primary;
+      border-radius: 3px;
+      box-sizing: border-box;
+      transition: all 150ms;
+    }
+    &:checked {
+      + span {
+        border-width: $checkboxSize / 2;
+        &::before {
+          content: 'check';
+          font-family: 'Material Icons';
+          font-size: 20px;
+          color: $checkedColor;
+        }
+      }
+    }
+    &:disabled {
+      + span {
+        background: $disabledBG;
+      }
+    }
+  }
