@@ -1,0 +1,65 @@
+.button {
+    &.is-text {
+        border-color: none;
+        color: $primary;
+        text-decoration: none;
+    }
+    &.is-outline {
+        border-color: $primary;
+        color: $primary;
+    }
+    font-size: 14px;
+}
+
+body {
+    background-color: #FAFAFA;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+
+}
+
+html, body {
+    height: 100%;
+}
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+}
+
+.label {
+    font-size: 12px;
+    color: #222;
+    margin-top: auto;
+}
+
+.navbar-center {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    
+}
+
+.navbar {
+    -webkit-box-shadow: 0 1px 6px rgba(57, 73, 76, 0.35);
+    box-shadow: 0 1px 6px rgba(57, 73, 76, 0.35);
+}
+
+.navbar-item {
+    font-weight: 600;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+.navbar-item:focus, .navbar-item:focus-within, .navbar-item:hover, 
+.navbar-item.is-active, .navbar-link:focus, 
+.navbar-link:focus-within, 
+.navbar-link:hover, .navbar-link.is-active {
+
+    background-color: #fafafa;
+    color: $primary;
+
+}
+
+.navbar-item, .navbar-link {
+    cursor: pointer;
+}

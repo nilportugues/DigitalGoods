@@ -1,0 +1,7 @@
+
+$turquoise:    #5AA888;
+$primary : $turquoise;
+@import "../node_modules/bulma/bulma";
+@import "./custom.scss";
+@import "./auth.scss";
+// @import "../node_modules/react-notifications/dist/react-notifications.css";

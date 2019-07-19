@@ -1,0 +1,8 @@
+{
+	"auth": {
+		"digitalgoods": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation"
+		}
+	}
+}

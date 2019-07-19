@@ -1,0 +1,75 @@
+{
+    "identityPoolName": "digitalgoods_identity_pool",
+    "allowUnauthenticatedIdentities": false,
+    "lambdaLogPolicy": "digita_b1b4bf22_lambda_log_policy",
+    "openIdLambdaRoleName": "digita_b1b4bf22_openid_lambda_role",
+    "openIdRolePolicy": "digita_b1b4bf22_openid_pass_role_policy",
+    "openIdLambdaIAMPolicy": "digita_b1b4bf22_openid_lambda_iam_policy",
+    "openIdLogPolicy": "digita_b1b4bf22_openid_lambda_log_policy",
+    "userPoolName": "digitalgoods_user_pool",
+    "autoVerifiedAttributes": [
+        "email"
+    ],
+    "mfaConfiguration": "OFF",
+    "mfaTypes": [
+        "SMS Text Message"
+    ],
+    "roleName": "digitab1b4bf22_sns-role",
+    "roleExternalId": "digitab1b4bf22_role_external_id",
+    "policyName": "digitab1b4bf22-sns-policy",
+    "smsAuthenticationMessage": "Your authentication code is {####}",
+    "smsVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
+    "defaultPasswordPolicy": false,
+    "passwordPolicyMinLength": 8,
+    "passwordPolicyCharacters": [],
+    "requiredAttributes": [
+        "email",
+        "family_name",
+        "given_name"
+    ],
+    "userpoolClientName": "digitab1b4bf22_app_client",
+    "userpoolClientGenerateSecret": true,
+    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientWriteAttributes": [
+        "email"
+    ],
+    "userpoolClientReadAttributes": [
+        "email"
+    ],
+    "mfaLambdaRole": "digitab1b4bf22_totp_lambda_role",
+    "mfaLambdaLogPolicy": "digitab1b4bf22_totp_lambda_log_policy",
+    "mfaPassRolePolicy": "digitab1b4bf22_totp_pass_role_policy",
+    "mfaLambdaIAMPolicy": "digitab1b4bf22_totp_lambda_iam_policy",
+    "userpoolClientLambdaRole": "digitab1b4bf22_userpoolclient_lambda_role",
+    "userpoolClientLogPolicy": "digitab1b4bf22_userpoolclient_lambda_log_policy",
+    "userpoolClientLambdaPolicy": "digitab1b4bf22_userpoolclient_lambda_iam_policy",
+    "userpoolClientSetAttributes": false,
+    "useDefault": "manual",
+    "authSelections": "identityPoolAndUserPool",
+    "resourceName": "digitalgoods",
+    "thirdPartyAuth": false,
+    "usernameAttributes": [
+        "email"
+    ],
+    "hostedUI": false,
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    },
+    "unauthRoleArn": {
+        "Fn::GetAtt": [
+            "UnauthRole",
+            "Arn"
+        ]
+    }
+}
