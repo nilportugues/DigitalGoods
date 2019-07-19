@@ -1,7 +1,13 @@
 {
 	"auth": {
-		"digitalgoods": {
+		"contributor": {
 			"service": "Cognito",
+			"providerPlugin": "awscloudformation"
+		}
+	},
+	"storage": {
+		"s3idcard": {
+			"service": "S3",
 			"providerPlugin": "awscloudformation"
 		}
 	}

@@ -1,5 +1,6 @@
 .button {
     font-size: 17px;
+    height: auto;
     &.is-text {
         border-color: none;
         color: $primary;
@@ -20,7 +21,19 @@
     }
 
     &.is-primary {
-        padding: 22px 20px;
+        padding: 12px 20px;
+    }
+
+    &.is-mediumn-primary {
+        @extend.is-primary;
+        padding: 8px 20px;
+        font-size: 13px;
+    }
+
+    &.is-normal-primary {
+        background-color: $primary;
+        color: white;
+        border-width: 0px;
     }
     
 }
@@ -29,10 +42,11 @@ body {
     background-color: #FAFAFA;
     font-family: 'SF-Pro-Text';
     font-size: 12px;
-
+    height: auto;
+    min-height: 100%;
 }
 
-html, body {
+html {
     height: 100%;
 }
 h1 {
@@ -81,7 +95,7 @@ h1 {
 }
 
 .error {
-    font-size: 9px;
+    font-size: 15px;
     color: red;
 }
 
@@ -96,3 +110,30 @@ h1 {
     align-items: center;
     justify-content: center;
 }
+
+.semibold {
+    font-weight: bolder !important;
+}
+
+.is-large.input {
+
+    font-size: 20px;
+
+}
+
+::-webkit-input-placeholder {
+    color: peachpuff;
+    font-size: 15px;
+  }
+  ::-moz-placeholder {
+    color: peachpuff;
+    font-size: 15px;
+  }
+  :-ms-input-placeholder {
+    color: peachpuff;
+    font-size: 15px;
+  }
+  ::placeholder {
+    color: peachpuff;
+    font-size: 15px;
+  }

@@ -4,13 +4,10 @@ import { toast } from 'react-toastify';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import Link from 'next/link';
-import Amplify from 'aws-amplify';
 import Auth from '@aws-amplify/auth';
 import Layout from '../components/layout';
 import Loader from '../components/Loader';
 import awsconfig from '../aws-exports';
-
-Amplify.configure(awsconfig);
 
 Auth.configure(awsconfig);
 
@@ -44,9 +41,14 @@ class SignIn extends Component {
       username: email, // Required, the username
       password // Optional, the password
     })
-      .then(() => {
-        Router.push(`/dashboard`);
+      .then(user => {
         toast.success('Sign In Success!');
+
+        // save user data
+        localStorage.setItem('user', JSON.stringify(user.attributes));
+
+        this.setState({ loading: false });
+        Router.push(`/dashboard`);
       })
       .catch(err => {
         this.setState({ loading: false });
@@ -54,8 +56,7 @@ class SignIn extends Component {
           // The error happens if the user didn't finish the confirmation step when signing up
           // In this case you need to resend the code and confirm the user
           // About how to resend the code and confirm the user, please check the signUp part
-          Auth.resendSignUp(email);
-          Router.push(`/confirmsignup/${email}`);
+          Router.push(`/confirmsignup/${email}/${password}`);
         } else if (err.code === 'PasswordResetRequiredException') {
           // The error happens when the password is reset in the Cognito console
           // In this case you need to call forgotPassword to reset the password
@@ -89,7 +90,7 @@ class SignIn extends Component {
                 this.loginHandler(values.email, values.password);
               }}
             >
-              {({ errors, touched }) => (
+              {({ errors, touched, values }) => (
                 <Form className="mt-60">
                   <div className="field">
                     <label className="label">Email</label>
@@ -101,8 +102,10 @@ class SignIn extends Component {
                         placeholder="user@company.com"
                         className="input is-large"
                       />
-                      {errors.email && touched.email ? (
-                        <div>{errors.email}</div>
+                      {errors.email &&
+                      touched.email &&
+                      values.email.length > 0 ? (
+                        <div className="error">{errors.email}</div>
                       ) : null}
                     </div>
                   </div>
@@ -115,15 +118,21 @@ class SignIn extends Component {
                         placeholder="Enter your password"
                         className="input is-large"
                       />
-                      {errors.password && touched.password ? (
-                        <div>{errors.password}</div>
+                      {errors.password &&
+                      touched.password &&
+                      values.password.length > 0 ? (
+                        <div className="error">{errors.password}</div>
                       ) : null}
                     </div>
                   </div>
                   <div className="field">
                     <div className="control">
                       <Link href="/resetpassword">
-                        <button type="button" className="button is-small-text">
+                        <button
+                          type="button"
+                          className="button is-small-text"
+                          style={{ padding: '0' }}
+                        >
                           Forgot password?
                         </button>
                       </Link>
@@ -132,14 +141,21 @@ class SignIn extends Component {
 
                   <div className="field">
                     <div className="control">
-                      <button type="submit" className="p-40 button is-primary ">
+                      <button
+                        type="submit"
+                        className="p-40 button is-primary "
+                        disabled={
+                          Object.keys(errors).length !== 0 ||
+                          values.password.length === 0
+                        }
+                      >
                         Sign In
                       </button>
                     </div>
                   </div>
 
                   <div className="field is-grouped">
-                    <label className="label">Don't have an account?</label>
+                    <label className="label">Don&apos;t have an account?</label>
                     <div className="control">
                       <Link href="/signup">
                         <button type="button" className="button is-text">

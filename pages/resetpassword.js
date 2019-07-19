@@ -4,18 +4,34 @@ import Router from 'next/router';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import Link from 'next/link';
-import Amplify from 'aws-amplify';
 import Auth from '@aws-amplify/auth';
 import Layout from '../components/layout';
+import Loader from '../components/Loader';
 import awsconfig from '../aws-exports';
-
-Amplify.configure(awsconfig);
 
 Auth.configure(awsconfig);
 
-const resetSchema = Yup.object().shape({
+const emailSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email')
+    .required('Required')
+});
+
+const confirmSchema = Yup.object().shape({
+  email: Yup.string()
+    .email('Invalid email')
+    .required('Required'),
+  password: Yup.string()
+    .min(8, 'Too Short!')
+    .max(50, 'Too Long!')
+    .required('Required')
+    .matches(
+      /(?=^.{8,}$)(?=.*\d)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/,
+      'Must Contain 8 Characters, One Uppercase, One Lowercase and One Number'
+    ),
+  code: Yup.string()
+    .min(6, 'Too Short!')
+    .max(6, 'Too Long!')
     .required('Required')
 });
 
@@ -28,27 +44,33 @@ class ResetPassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      forgotEmailSent: false
+      forgotEmailSent: false,
+      loading: false
     };
   }
 
   resetHandler = (email, code, password) => {
     if (this.state.forgotEmailSent) {
       // Collect confirmation code and new password, then
+      this.setState({ loading: true });
       Auth.forgotPasswordSubmit(email, code, password)
         .then(() => {
+          this.setState({ loading: false });
           toast.success('Password changed successfully!');
           Router.push(`/signin`);
         })
         .catch(() => {
+          this.setState({ loading: false });
           toast.error('Something went wrong!');
         });
     } else {
+      this.setState({ loading: true });
       Auth.forgotPassword(email)
         .then(() => {
-          this.setState({ forgotEmailSent: true });
+          this.setState({ forgotEmailSent: true, loading: false });
         })
         .catch(() => {
+          this.setState({ loading: false });
           toast.error('Something went wrong!');
         });
     }
@@ -57,19 +79,26 @@ class ResetPassword extends Component {
   render() {
     return (
       <Layout>
+        <Loader loading={this.state.loading} />
         <div className="columns">
           <div className="column reset-card">
             <h1>Reset your password</h1>
             <Formik
-              initialValues={{ email: '' }}
-              validationSchema={resetSchema}
+              initialValues={
+                this.state.forgotEmailSent
+                  ? { email: '', code: '', password: '' }
+                  : { email: '' }
+              }
+              validationSchema={
+                this.state.forgotEmailSent ? confirmSchema : emailSchema
+              }
               onSubmit={values => {
                 // same shape as initial values
                 console.log(values);
                 this.resetHandler(values.email, values.code, values.password);
               }}
             >
-              {({ errors, touched }) => (
+              {({ errors, touched, values }) => (
                 <Form className="mt-60">
                   <div className="field">
                     <label className="label">Email</label>
@@ -83,7 +112,7 @@ class ResetPassword extends Component {
                         className="input is-large"
                       />
                       {errors.email && touched.email ? (
-                        <div>{errors.email}</div>
+                        <div className="error">{errors.email}</div>
                       ) : null}
                     </div>
                   </div>
@@ -101,7 +130,7 @@ class ResetPassword extends Component {
                           className="input is-large"
                         />
                         {errors.code && touched.code ? (
-                          <div>{errors.code}</div>
+                          <div className="error">{errors.code}</div>
                         ) : null}
                       </div>
                     </div>
@@ -124,7 +153,7 @@ class ResetPassword extends Component {
                           className="input is-large"
                         />
                         {errors.password && touched.password ? (
-                          <div>{errors.password}</div>
+                          <div className="error">{errors.password}</div>
                         ) : null}
                       </div>
                     </div>
@@ -137,6 +166,7 @@ class ResetPassword extends Component {
                       <button
                         type="submit"
                         className="button is-primary p-20 my-10"
+                        disabled={values.email.length === 0}
                       >
                         {this.state.forgotEmailSent
                           ? 'Confirm'

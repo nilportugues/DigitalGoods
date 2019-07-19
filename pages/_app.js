@@ -3,17 +3,11 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import withReduxSaga from 'next-redux-saga';
-
-import '../styles/styles.scss';
-
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faStroopwafel } from '@fortawesome/free-solid-svg-icons';
-
 import { ToastContainer } from 'react-toastify';
+import AxiosConfig from '../constants/AxiosConfig';
+import '../styles/styles.scss';
 import createStore from '../store';
 import 'react-toastify/dist/ReactToastify.css';
-
-library.add(faStroopwafel);
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -24,6 +18,10 @@ class MyApp extends App {
     }
 
     return { pageProps };
+  }
+
+  componentDidMount() {
+    AxiosConfig.init();
   }
 
   render() {

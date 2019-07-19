@@ -1,18 +1,18 @@
 {
     "prod": {
         "awscloudformation": {
-            "AuthRoleName": "digitalgoods-prod-20190603181440-authRole",
-            "UnauthRoleArn": "arn:aws:iam::893820931396:role/digitalgoods-prod-20190603181440-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::893820931396:role/digitalgoods-prod-20190603181440-authRole",
+            "AuthRoleName": "contributor-prod-20190619220942-authRole",
+            "UnauthRoleArn": "arn:aws:iam::893820931396:role/contributor-prod-20190619220942-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::893820931396:role/contributor-prod-20190619220942-authRole",
             "Region": "us-east-2",
-            "DeploymentBucketName": "digitalgoods-prod-20190603181440-deployment",
-            "UnauthRoleName": "digitalgoods-prod-20190603181440-unauthRole",
-            "StackName": "digitalgoods-prod-20190603181440",
-            "StackId": "arn:aws:cloudformation:us-east-2:893820931396:stack/digitalgoods-prod-20190603181440/51792d20-8612-11e9-a559-0a5f3eca4dfa"
+            "DeploymentBucketName": "contributor-prod-20190619220942-deployment",
+            "UnauthRoleName": "contributor-prod-20190619220942-unauthRole",
+            "StackName": "contributor-prod-20190619220942",
+            "StackId": "arn:aws:cloudformation:us-east-2:893820931396:stack/contributor-prod-20190619220942/cd7106e0-92c5-11e9-8b0e-06e3439fefa0"
         },
         "categories": {
             "auth": {
-                "digitalgoods": {}
+                "contributor": {}
             }
         }
     }

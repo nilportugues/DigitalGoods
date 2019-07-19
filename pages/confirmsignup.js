@@ -2,14 +2,14 @@ import { Component } from 'react';
 import Router from 'next/router';
 import { toast } from 'react-toastify';
 import { Formik, Form, Field } from 'formik';
+import CryptoJS from 'crypto-js';
 import * as Yup from 'yup';
 import Link from 'next/link';
-import Amplify from 'aws-amplify';
 import Auth from '@aws-amplify/auth';
 import Layout from '../components/layout';
+import Loader from '../components/Loader';
 import awsconfig from '../aws-exports';
-
-Amplify.configure(awsconfig);
+import { doCreateUser } from '../apis/User';
 
 Auth.configure(awsconfig);
 
@@ -21,28 +21,78 @@ const ConfirmSchema = Yup.object().shape({
 });
 
 class ConfirmSignUp extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false
+    };
+  }
+
   static getInitialProps(ctx) {
-    return { username: ctx.ctx.query.username };
+    const data = decodeURIComponent(ctx.ctx.query.data);
+
+    return {
+      data
+    };
   }
 
   confirmHandler = code => {
-    Auth.confirmSignUp(this.props.username, code, {
+    this.setState({ loading: true });
+
+    // Decrypt
+    const bytes = CryptoJS.AES.decrypt(
+      this.props.data,
+      process.env.SECRET_KEY_CRYPTO
+    );
+    const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+
+    const username = decryptedData.email;
+    const { password } = decryptedData;
+
+    Auth.confirmSignUp(username, code, {
       // Optional. Force user confirmation irrespective of existing alias. By default set to True.
       forceAliasCreation: true
     })
       .then(() => {
-        toast.success('Confirm Code success!');
-        Router.push(`/signin`);
+        Auth.signIn({
+          username,
+          password
+        })
+          .then(user => {
+            localStorage.setItem('user', JSON.stringify(user.attributes));
+
+            toast.success('Confirm Code success!');
+
+            doCreateUser({
+              membership_type: -1,
+              user_name: user.username,
+              email: user.attributes.email,
+              first_name: user.attributes.given_name,
+              last_name: user.attributes.family_name
+            })
+              .then(() => {
+                this.setState({ loading: false });
+
+                Router.push(`/dashboard`);
+              })
+              .catch(() => {
+                this.setState({ loading: false });
+              });
+          })
+          .catch(() => {
+            this.setState({ loading: false });
+          });
       })
-      .catch(err => {
+      .catch(() => {
         toast.error('Confirm code failed!');
-        console.log(err);
+        this.setState({ loading: false });
       });
   };
 
   render() {
     return (
       <Layout>
+        <Loader loading={this.state.loading} />
         <div className="columns">
           <div className="column signin-card">
             <h1>Confirm Code</h1>

@@ -1,20 +1,19 @@
-import React, { Component } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { Component, Fragment } from 'react';
 import {
-  faHome,
-  faFileAlt,
-  faCreditCard,
-  faCog,
-  faTasks
-} from '@fortawesome/free-solid-svg-icons';
+  Dashboard,
+  Layers,
+  DescriptionOutlined,
+  CreditCard,
+  Assessment,
+  Settings
+} from '@material-ui/icons';
+
 import Link from 'next/link';
 
 import Router from 'next/router';
-import Amplify from 'aws-amplify';
 import Auth from '@aws-amplify/auth';
 import awsconfig from '../aws-exports';
 
-Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
 
 class Header extends Component {
@@ -26,14 +25,18 @@ class Header extends Component {
   }
 
   componentDidMount() {
-    if (localStorage.getItem('user')) {
-      this.setState({
-        signin: true,
-        user: JSON.parse(localStorage.getItem('user'))
+    Auth.currentAuthenticatedUser({
+      bypassCache: false // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
+    })
+      .then(user => {
+        this.setState({
+          signin: true,
+          user: user.attributes
+        });
+      })
+      .catch(err => {
+        this.setState({ signin: false });
       });
-    } else {
-      this.setState({ signin: false });
-    }
   }
 
   signin = e => {
@@ -42,12 +45,13 @@ class Header extends Component {
 
   signout = () => {
     Auth.signOut();
-    localStorage.removeItem('user');
     localStorage.removeItem('token');
+    this.setState({ signin: false });
     Router.push('/signin');
   };
 
   render() {
+    if (typeof window === 'undefined') return <Fragment />;
     return (
       <nav className="navbar">
         <div className="navbar-brand">
@@ -67,64 +71,126 @@ class Header extends Component {
         <div id="navbarExampleTransparentExample" className="navbar-menu">
           {this.state.signin === false ? (
             <div className="navbar-center">
-              <Link href="/signup">
-                <div className="navbar-item" href="/">
+              <Link href="/addproduct">
+                <div
+                  className={
+                    Router.asPath === '/addproduct'
+                      ? 'navbar-item is-active'
+                      : 'navbar-item'
+                  }
+                >
                   Sell Your Product
                 </div>
               </Link>
-              <Link href="/signup">
-                <div className="navbar-item">Company</div>
+              <Link href="/company">
+                <div
+                  className={
+                    Router.asPath === '/company'
+                      ? 'navbar-item is-active'
+                      : 'navbar-item'
+                  }
+                >
+                  Company
+                </div>
               </Link>
 
-              <Link href="/signup">
-                <div className="navbar-item" href="/">
+              <Link href="/pricing">
+                <div
+                  className={
+                    Router.asPath === '/pricing'
+                      ? 'navbar-item is-active'
+                      : 'navbar-item'
+                  }
+                >
                   Pricing
                 </div>
               </Link>
 
-              <Link href="/signup">
-                <div className="navbar-item" href="/">
+              <Link href="/support">
+                <div
+                  className={
+                    Router.asPath === '/support'
+                      ? 'navbar-item is-active'
+                      : 'navbar-item'
+                  }
+                >
                   Support
                 </div>
               </Link>
             </div>
           ) : (
             <div className="navbar-center">
-              <Link href="/signup">
-                <div className="navbar-item" href="/">
-                  <FontAwesomeIcon icon={faHome} />
+              <Link href="/dashboard">
+                <div
+                  className={
+                    Router.asPath === '/dashboard'
+                      ? 'navbar-item is-active'
+                      : 'navbar-item'
+                  }
+                >
+                  <Dashboard />
                   &nbsp;&nbsp;Dashboard
                 </div>
               </Link>
-              <Link href="/signup">
-                <div className="navbar-item">
-                  <FontAwesomeIcon icon={faTasks} />
+              <Link href="/products">
+                <div
+                  className={
+                    Router.asPath === '/products'
+                      ? 'navbar-item is-active'
+                      : 'navbar-item'
+                  }
+                >
+                  <Layers />
                   &nbsp;&nbsp;Products
                 </div>
               </Link>
 
-              <Link href="/signup">
-                <div className="navbar-item" href="/">
-                  <FontAwesomeIcon icon={faFileAlt} />
+              <Link href="/releases">
+                <div
+                  className={
+                    Router.asPath === '/releases'
+                      ? 'navbar-item is-active'
+                      : 'navbar-item'
+                  }
+                >
+                  <DescriptionOutlined />
                   &nbsp;&nbsp;Releases
                 </div>
               </Link>
 
-              <Link href="/signup">
-                <div className="navbar-item" href="/">
-                  <FontAwesomeIcon icon={faHome} />
+              <Link href="/analytics">
+                <div
+                  className={
+                    Router.asPath === '/analytics'
+                      ? 'navbar-item is-active'
+                      : 'navbar-item'
+                  }
+                >
+                  <Assessment />
                   &nbsp;&nbsp;Analytics
                 </div>
               </Link>
-              <Link href="/signup">
-                <div className="navbar-item" href="/">
-                  <FontAwesomeIcon icon={faCreditCard} />
+              <Link href="/payment">
+                <div
+                  className={
+                    Router.asPath === '/payment'
+                      ? 'navbar-item is-active'
+                      : 'navbar-item'
+                  }
+                >
+                  <CreditCard />
                   &nbsp;&nbsp;Payment
                 </div>
               </Link>
-              <Link href="/signup">
-                <div className="navbar-item" href="/">
-                  <FontAwesomeIcon icon={faCog} />
+              <Link href="/account">
+                <div
+                  className={
+                    Router.asPath === '/account'
+                      ? 'navbar-item is-active'
+                      : 'navbar-item'
+                  }
+                >
+                  <Settings />
                   &nbsp;&nbsp;Account
                 </div>
               </Link>
@@ -132,8 +198,8 @@ class Header extends Component {
           )}
           <div className="navbar-end">
             <div className="navbar-item">
-              <div className="field is-grouped">
-                {this.state.signin === false ? (
+              {this.state.signin === false ? (
+                <div className="field is-grouped">
                   <p className="control">
                     <Link href="/signin">
                       <button
@@ -144,20 +210,32 @@ class Header extends Component {
                       </button>
                     </Link>
                   </p>
-                ) : (
-                  <div className="navbar-item has-dropdown is-hoverable">
-                    <a className="navbar-link">{this.state.user.given_name}</a>
-
-                    <div className="navbar-dropdown">
-                      <a className="navbar-item">My account</a>
-                      <hr className="navbar-divider" />
-                      <a className="navbar-item">
-                        <div onClick={e => this.signout(e)}>SIGN OUT</div>
-                      </a>
-                    </div>
-                  </div>
-                )}
-              </div>
+                </div>
+              ) : (
+                <div className="field is-grouped">
+                  <p className="control">
+                    <Link href="/addproduct">
+                      <button
+                        type="button"
+                        className="button is-mediumn-primary"
+                      >
+                        + Add Product
+                      </button>
+                    </Link>
+                  </p>
+                  <p className="control">
+                    <Link href="#">
+                      <button
+                        type="button"
+                        className="button"
+                        onClick={e => this.signout(e)}
+                      >
+                        {this.state.user.given_name}
+                      </button>
+                    </Link>
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -7,7 +7,7 @@ require('dotenv').config;
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
 const nextConfig = {
-  target: 'serverless',
+  target: 'server',
   webpack: config => {
     config.plugins = config.plugins || [];
     config.plugins.push(

@@ -4,14 +4,11 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
-
-import Amplify from 'aws-amplify';
+import CryptoJS from 'crypto-js';
 import Auth from '@aws-amplify/auth';
 import Loader from '../components/Loader';
 import Layout from '../components/layout';
 import awsconfig from '../aws-exports';
-
-Amplify.configure(awsconfig);
 
 Auth.configure(awsconfig);
 
@@ -63,7 +60,15 @@ class Signup extends Component {
       validationData: [] // optional
     })
       .then(data => {
-        Router.push(`/confirmsignup/${data.user.username}`);
+        // Encrypt
+        const ciphertext = CryptoJS.AES.encrypt(
+          JSON.stringify({ email, password }),
+          process.env.SECRET_KEY_CRYPTO
+        );
+
+        Router.push(
+          `/confirmsignup/${encodeURIComponent(ciphertext.toString())}`
+        );
       })
       .catch(err => {
         this.setState({ loading: false });
@@ -86,8 +91,8 @@ class Signup extends Component {
               initialValues={{
                 email: '',
                 password: '',
-                family_name: '',
-                given_name: ''
+                firstName: '',
+                lastName: ''
               }}
               validationSchema={SignupSchema}
               onSubmit={values => {
@@ -101,7 +106,7 @@ class Signup extends Component {
                 );
               }}
             >
-              {({ errors, touched }) => (
+              {({ errors, touched, values }) => (
                 <Form className="mt-60">
                   <div className="field">
                     <label className="label">First Name</label>
@@ -170,7 +175,10 @@ class Signup extends Component {
                       <button
                         type="submit"
                         className="button is-primary p-40"
-                        disabled={Object.keys(errors).length !== 0}
+                        disabled={
+                          Object.keys(errors).length !== 0 ||
+                          values.password.length === 0
+                        }
                       >
                         Continue
                       </button>

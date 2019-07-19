@@ -6,12 +6,15 @@ const { parse } = require('url');
 const pathMatch = require('path-match');
 // @ts-ignore
 const port = parseInt(process.env.PORT, 10) || 3000;
-const dev = true;
+const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 const route = pathMatch();
 const matches = [
-  { route: route('/confirmsignup/:username'), page: '/confirmsignup' }
+  {
+    route: route('/confirmsignup/:data'),
+    page: '/confirmsignup'
+  }
 ];
 
 app.prepare().then(() => {
@@ -21,7 +24,6 @@ app.prepare().then(() => {
     const { pathname, query } = parsedUrl;
     let hasMatch = false;
 
-    // eslint-disable-next-line no-restricted-syntax
     for (const match of matches) {
       const params = match.route(pathname);
       if (params) {

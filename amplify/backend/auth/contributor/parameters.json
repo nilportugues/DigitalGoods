@@ -1,12 +1,12 @@
 {
-    "identityPoolName": "digitalgoods_identity_pool",
+    "identityPoolName": "contributor_identity_pool",
     "allowUnauthenticatedIdentities": false,
-    "lambdaLogPolicy": "digita_b1b4bf22_lambda_log_policy",
-    "openIdLambdaRoleName": "digita_b1b4bf22_openid_lambda_role",
-    "openIdRolePolicy": "digita_b1b4bf22_openid_pass_role_policy",
-    "openIdLambdaIAMPolicy": "digita_b1b4bf22_openid_lambda_iam_policy",
-    "openIdLogPolicy": "digita_b1b4bf22_openid_lambda_log_policy",
-    "userPoolName": "digitalgoods_user_pool",
+    "lambdaLogPolicy": "contri_7d355d85_lambda_log_policy",
+    "openIdLambdaRoleName": "contri_7d355d85_openid_lambda_role",
+    "openIdRolePolicy": "contri_7d355d85_openid_pass_role_policy",
+    "openIdLambdaIAMPolicy": "contri_7d355d85_openid_lambda_iam_policy",
+    "openIdLogPolicy": "contri_7d355d85_openid_lambda_log_policy",
+    "userPoolName": "contributor_user_pool",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -14,9 +14,9 @@
     "mfaTypes": [
         "SMS Text Message"
     ],
-    "roleName": "digitab1b4bf22_sns-role",
-    "roleExternalId": "digitab1b4bf22_role_external_id",
-    "policyName": "digitab1b4bf22-sns-policy",
+    "roleName": "contri7d355d85_sns-role",
+    "roleExternalId": "contri7d355d85_role_external_id",
+    "policyName": "contri7d355d85-sns-policy",
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
     "emailVerificationSubject": "Your verification code",
@@ -29,7 +29,7 @@
         "family_name",
         "given_name"
     ],
-    "userpoolClientName": "digitab1b4bf22_app_client",
+    "userpoolClientName": "contri7d355d85_app_client",
     "userpoolClientGenerateSecret": true,
     "userpoolClientRefreshTokenValidity": 30,
     "userpoolClientWriteAttributes": [
@@ -38,17 +38,17 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "mfaLambdaRole": "digitab1b4bf22_totp_lambda_role",
-    "mfaLambdaLogPolicy": "digitab1b4bf22_totp_lambda_log_policy",
-    "mfaPassRolePolicy": "digitab1b4bf22_totp_pass_role_policy",
-    "mfaLambdaIAMPolicy": "digitab1b4bf22_totp_lambda_iam_policy",
-    "userpoolClientLambdaRole": "digitab1b4bf22_userpoolclient_lambda_role",
-    "userpoolClientLogPolicy": "digitab1b4bf22_userpoolclient_lambda_log_policy",
-    "userpoolClientLambdaPolicy": "digitab1b4bf22_userpoolclient_lambda_iam_policy",
+    "mfaLambdaRole": "contri7d355d85_totp_lambda_role",
+    "mfaLambdaLogPolicy": "contri7d355d85_totp_lambda_log_policy",
+    "mfaPassRolePolicy": "contri7d355d85_totp_pass_role_policy",
+    "mfaLambdaIAMPolicy": "contri7d355d85_totp_lambda_iam_policy",
+    "userpoolClientLambdaRole": "contri7d355d85_userpoolclient_lambda_role",
+    "userpoolClientLogPolicy": "contri7d355d85_userpoolclient_lambda_log_policy",
+    "userpoolClientLambdaPolicy": "contri7d355d85_userpoolclient_lambda_iam_policy",
     "userpoolClientSetAttributes": false,
     "useDefault": "manual",
     "authSelections": "identityPoolAndUserPool",
-    "resourceName": "digitalgoods",
+    "resourceName": "contributor",
     "thirdPartyAuth": false,
     "usernameAttributes": [
         "email"

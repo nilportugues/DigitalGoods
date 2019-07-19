@@ -1,10 +1,7 @@
 import axios from 'axios';
 import Auth from '@aws-amplify/auth';
-import Amplify from 'aws-amplify';
 import { toast } from 'react-toastify';
 import awsconfig from '../aws-exports';
-
-Amplify.configure(awsconfig);
 
 Auth.configure(awsconfig);
 
