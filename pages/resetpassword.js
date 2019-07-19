@@ -1,4 +1,6 @@
 import { Component } from 'react';
+import { toast } from 'react-toastify';
+import Router from 'next/router';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import Link from 'next/link';
@@ -23,18 +25,40 @@ class ResetPassword extends Component {
     return { isServer };
   }
 
-  resetHandler = email => {
-    alert(email);
-    Auth.forgotPassword(email)
-      .then(data => console.log(data))
-      .catch(err => console.log(err));
+  constructor(props) {
+    super(props);
+    this.state = {
+      forgotEmailSent: false
+    };
+  }
+
+  resetHandler = (email, code, password) => {
+    if (this.state.forgotEmailSent) {
+      // Collect confirmation code and new password, then
+      Auth.forgotPasswordSubmit(email, code, password)
+        .then(() => {
+          toast.success('Password changed successfully!');
+          Router.push(`/signin`);
+        })
+        .catch(() => {
+          toast.error('Something went wrong!');
+        });
+    } else {
+      Auth.forgotPassword(email)
+        .then(() => {
+          this.setState({ forgotEmailSent: true });
+        })
+        .catch(() => {
+          toast.error('Something went wrong!');
+        });
+    }
   };
 
   render() {
     return (
       <Layout>
         <div className="columns">
-          <div className="column card w-500">
+          <div className="column reset-card">
             <h1>Reset your password</h1>
             <Formik
               initialValues={{ email: '' }}
@@ -42,7 +66,7 @@ class ResetPassword extends Component {
               onSubmit={values => {
                 // same shape as initial values
                 console.log(values);
-                this.resetHandler(values.email);
+                this.resetHandler(values.email, values.code, values.password);
               }}
             >
               {({ errors, touched }) => (
@@ -56,7 +80,7 @@ class ResetPassword extends Component {
                         name="email"
                         id="email"
                         placeholder="user@company.com"
-                        className="input is-medium"
+                        className="input is-large"
                       />
                       {errors.email && touched.email ? (
                         <div>{errors.email}</div>
@@ -64,13 +88,59 @@ class ResetPassword extends Component {
                     </div>
                   </div>
 
+                  {this.state.forgotEmailSent ? (
+                    <div className="field">
+                      <label className="label">Code</label>
+
+                      <div className="control">
+                        <Field
+                          type="code"
+                          name="code"
+                          id="code"
+                          placeholder="123456"
+                          className="input is-large"
+                        />
+                        {errors.code && touched.code ? (
+                          <div>{errors.code}</div>
+                        ) : null}
+                      </div>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+
+                  {this.state.forgotEmailSent ? (
+                    <div className="field">
+                      <label htmlFor="password" className="label">
+                        New Password
+                      </label>
+
+                      <div className="control">
+                        <Field
+                          type="password"
+                          name="password"
+                          id="password"
+                          placeholder="Enter your new Password"
+                          className="input is-large"
+                        />
+                        {errors.password && touched.password ? (
+                          <div>{errors.password}</div>
+                        ) : null}
+                      </div>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+
                   <div className="field">
                     <div className="control">
                       <button
                         type="submit"
                         className="button is-primary p-20 my-10"
                       >
-                        Reset Password
+                        {this.state.forgotEmailSent
+                          ? 'Confirm'
+                          : 'Reset Password'}
                       </button>
                     </div>
                   </div>
@@ -86,7 +156,10 @@ class ResetPassword extends Component {
                     </div>
                   </div>
 
-                  <div className="field is-grouped">
+                  <div
+                    className="field is-grouped"
+                    style={{ marginTop: '-20px' }}
+                  >
                     <label className="label">Don&apos;t have an account?</label>
                     <div className="control">
                       <Link href="/signup">

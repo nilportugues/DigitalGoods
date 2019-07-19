@@ -5,18 +5,61 @@
     margin: auto;
 }
 
-.card {
-    border: #ccc 1px solid ;
-    padding-left: 100px;
-    padding-right: 100px;
-    padding-top: 60px;
-    margin-top: 80px;
+.signin-card {
+    width: 486px;
+    max-width: 486px;
+    margin: auto;
+    border: #e0e0e0 2px solid ;
+    border-radius: 4px;
+    padding-left: 74px;
+    padding-right: 66px;
+    padding-top: 83px;
+    padding-bottom: 96px;
+    margin-top: 89px;
+    background-color: white;
+}
+
+.signup-card {
+    width: 617px;
+    max-width: 617px;
+    margin: auto;
+    border: #e0e0e0 2px solid ;
+    border-radius: 4px;
+    padding-left: 136px;
+    padding-right: 161px;
+    padding-top: 69px;
+    padding-bottom: 15px;
+    margin-top: 89px;
+    background-color: white;
+}
+
+.reset-card {
+    width: 486px;
+    max-width: 486px;
+    margin: auto;
+    border: #e0e0e0 2px solid ;
+    border-radius: 4px;
+    padding-left: 60px;
+    padding-right: 50px;
+    padding-top: 83px;
+    padding-bottom: 96px;
+    margin-top: 89px;
     background-color: white;
 }
 
 .p-20 {
-    padding-right: 20px;
-    padding-left: 20px;
+    padding-right: 20px !important;
+    padding-left: 20px !important;
+}
+
+.p-30 {
+    padding-right: 30px !important;
+    padding-left: 30px !important;
+}
+
+.p-40 {
+    padding-right: 40px !important;
+    padding-left: 40px !important;
 }
 
 .mt-60 {

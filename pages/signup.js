@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 
 import Amplify from 'aws-amplify';
 import Auth from '@aws-amplify/auth';
+import Loader from '../components/Loader';
 import Layout from '../components/layout';
 import awsconfig from '../aws-exports';
 
@@ -16,9 +17,13 @@ Auth.configure(awsconfig);
 
 const SignupSchema = Yup.object().shape({
   password: Yup.string()
-    .min(2, 'Too Short!')
+    .min(8, 'Too Short!')
     .max(50, 'Too Long!')
-    .required('Required'),
+    .required('Required')
+    .matches(
+      /(?=^.{8,}$)(?=.*\d)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/,
+      'Must Contain 8 Characters, One Uppercase, One Lowercase and One Number'
+    ),
   firstName: Yup.string()
     .min(2, 'Too Short!')
     .max(50, 'Too Long!')
@@ -33,12 +38,20 @@ const SignupSchema = Yup.object().shape({
 });
 
 class Signup extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false
+    };
+  }
+
   static getInitialProps() {
     const isServer = typeof window === 'undefined';
     return { isServer };
   }
 
   registerHandler = (email, password, firstName, lastName) => {
+    this.setState({ loading: true });
     Auth.signUp({
       username: email,
       password,
@@ -53,9 +66,9 @@ class Signup extends Component {
         Router.push(`/confirmsignup/${data.user.username}`);
       })
       .catch(err => {
+        this.setState({ loading: false });
         if (err.code === 'UsernameExistsException') {
           toast.error('User already exist');
-          Router.push(`/signin`);
         } else {
           toast.error('User Sign Up failed!');
         }
@@ -65,11 +78,17 @@ class Signup extends Component {
   render() {
     return (
       <Layout>
+        <Loader loading={this.state.loading} />
         <div className="columns">
-          <div className="column card w-500">
+          <div className="column signup-card">
             <h1>Sign Up</h1>
             <Formik
-              initialValues={{ email: '', password: '' }}
+              initialValues={{
+                email: '',
+                password: '',
+                family_name: '',
+                given_name: ''
+              }}
               validationSchema={SignupSchema}
               onSubmit={values => {
                 // same shape as initial values
@@ -92,10 +111,10 @@ class Signup extends Component {
                         type="text"
                         name="firstName"
                         placeholder="First Name"
-                        className="input is-medium"
+                        className="input is-large"
                       />
                       {errors.firstName && touched.firstName ? (
-                        <div>{errors.firstName}</div>
+                        <div className="error">{errors.firstName}</div>
                       ) : null}
                     </div>
                   </div>
@@ -108,10 +127,10 @@ class Signup extends Component {
                         type="text"
                         name="lastName"
                         placeholder="Last Name"
-                        className="input is-medium"
+                        className="input is-large"
                       />
                       {errors.lastName && touched.lastName ? (
-                        <div>{errors.lastName}</div>
+                        <div className="error">{errors.lastName}</div>
                       ) : null}
                     </div>
                   </div>
@@ -124,10 +143,10 @@ class Signup extends Component {
                         type="email"
                         name="email"
                         placeholder="user@company.com"
-                        className="input is-medium"
+                        className="input is-large"
                       />
                       {errors.email && touched.email ? (
-                        <div>{errors.email}</div>
+                        <div className="error">{errors.email}</div>
                       ) : null}
                     </div>
                   </div>
@@ -138,17 +157,21 @@ class Signup extends Component {
                         type="password"
                         name="password"
                         placeholder="Enter your password"
-                        className="input is-medium"
+                        className="input is-large"
                       />
                       {errors.password && touched.password ? (
-                        <div>{errors.password}</div>
+                        <div className="error">{errors.password}</div>
                       ) : null}
                     </div>
                   </div>
 
                   <div className="field">
                     <div className="control">
-                      <button type="submit" className="button is-primary p-20">
+                      <button
+                        type="submit"
+                        className="button is-primary p-40"
+                        disabled={Object.keys(errors).length !== 0}
+                      >
                         Continue
                       </button>
                     </div>
@@ -158,7 +181,9 @@ class Signup extends Component {
                     <label className="label">Already have an account?</label>
                     <div className="control">
                       <Link href="/signin">
-                        <button className="button is-text">Sign In</button>
+                        <button type="button" className="button is-text">
+                          Sign In
+                        </button>
                       </Link>
                     </div>
                   </div>

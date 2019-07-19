@@ -22,9 +22,6 @@ const ConfirmSchema = Yup.object().shape({
 
 class ConfirmSignUp extends Component {
   static getInitialProps(ctx) {
-    console.log('test');
-    console.log(ctx.ctx.query.username);
-    console.log('test');
     return { username: ctx.ctx.query.username };
   }
 
@@ -47,14 +44,13 @@ class ConfirmSignUp extends Component {
     return (
       <Layout>
         <div className="columns">
-          <div className="column card w-500">
+          <div className="column signin-card">
             <h1>Confirm Code</h1>
             <Formik
               initialValues={{ code: '' }}
               validationSchema={ConfirmSchema}
               onSubmit={values => {
                 // same shape as initial values
-                console.log(values);
                 this.confirmHandler(values.code);
               }}
             >

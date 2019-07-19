@@ -1,6 +1,8 @@
 import { Component } from 'react';
+import Router from 'next/router';
 import Amplify from 'aws-amplify';
 import Auth from '@aws-amplify/auth';
+import requireAuth from '../components/requiresAuth';
 import Layout from '../components/layout';
 import awsconfig from '../aws-exports';
 
@@ -12,6 +14,16 @@ class Dashboard extends Component {
   static getInitialProps() {
     const isServer = typeof window === 'undefined';
     return { isServer };
+  }
+
+  componentDidMount() {
+    Auth.currentAuthenticatedUser({
+      bypassCache: false // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
+    })
+      .then(user => {})
+      .catch(err => {
+        Router.push(`/signin`);
+      });
   }
 
   render() {
@@ -27,4 +39,4 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
+export default requireAuth(Dashboard);

@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Amplify from 'aws-amplify';
 import Auth from '@aws-amplify/auth';
 import Layout from '../components/layout';
+import Loader from '../components/Loader';
 import awsconfig from '../aws-exports';
 
 Amplify.configure(awsconfig);
@@ -15,7 +16,7 @@ Auth.configure(awsconfig);
 
 const SigninSchema = Yup.object().shape({
   password: Yup.string()
-    .min(2, 'Too Short!')
+    .min(8, 'Too Short!')
     .max(50, 'Too Long!')
     .required('Required'),
   email: Yup.string()
@@ -24,12 +25,21 @@ const SigninSchema = Yup.object().shape({
 });
 
 class SignIn extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false
+    };
+  }
+
   static getInitialProps() {
     const isServer = typeof window === 'undefined';
     return { isServer };
   }
 
   loginHandler = (email, password) => {
+    this.setState({ loading: true });
+
     Auth.signIn({
       username: email, // Required, the username
       password // Optional, the password
@@ -39,6 +49,7 @@ class SignIn extends Component {
         toast.success('Sign In Success!');
       })
       .catch(err => {
+        this.setState({ loading: false });
         if (err.code === 'UserNotConfirmedException') {
           // The error happens if the user didn't finish the confirmation step when signing up
           // In this case you need to resend the code and confirm the user
@@ -65,8 +76,9 @@ class SignIn extends Component {
   render() {
     return (
       <Layout>
+        <Loader loading={this.state.loading} />
         <div className="columns">
-          <div className="column card w-500">
+          <div className="column signin-card">
             <h1>Sign In</h1>
             <Formik
               initialValues={{ email: '', password: '' }}
@@ -87,7 +99,7 @@ class SignIn extends Component {
                         type="email"
                         name="email"
                         placeholder="user@company.com"
-                        className="input is-medium"
+                        className="input is-large"
                       />
                       {errors.email && touched.email ? (
                         <div>{errors.email}</div>
@@ -101,7 +113,7 @@ class SignIn extends Component {
                         type="password"
                         name="password"
                         placeholder="Enter your password"
-                        className="input is-medium"
+                        className="input is-large"
                       />
                       {errors.password && touched.password ? (
                         <div>{errors.password}</div>
@@ -111,7 +123,7 @@ class SignIn extends Component {
                   <div className="field">
                     <div className="control">
                       <Link href="/resetpassword">
-                        <button type="button" className="button is-text">
+                        <button type="button" className="button is-small-text">
                           Forgot password?
                         </button>
                       </Link>
@@ -120,14 +132,14 @@ class SignIn extends Component {
 
                   <div className="field">
                     <div className="control">
-                      <button type="submit" className="button is-primary p-20">
+                      <button type="submit" className="p-40 button is-primary ">
                         Sign In
                       </button>
                     </div>
                   </div>
 
                   <div className="field is-grouped">
-                    <label className="label">Already have an account?</label>
+                    <label className="label">Don't have an account?</label>
                     <div className="control">
                       <Link href="/signup">
                         <button type="button" className="button is-text">

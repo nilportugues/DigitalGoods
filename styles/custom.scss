@@ -1,19 +1,33 @@
 .button {
+    font-size: 17px;
     &.is-text {
         border-color: none;
         color: $primary;
         text-decoration: none;
     }
+    &.is-small-text {
+        @extend .is-text;
+        font-size: 13px;
+    }
     &.is-outline {
         border-color: $primary;
         color: $primary;
+        border-width: 2px;
     }
-    font-size: 14px;
+    &.is-mediumn-outline {
+        @extend .is-outline;
+        font-size: 15px;
+    }
+
+    &.is-primary {
+        padding: 22px 20px;
+    }
+    
 }
 
 body {
     background-color: #FAFAFA;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'SF-Pro-Text';
     font-size: 12px;
 
 }
@@ -22,14 +36,16 @@ html, body {
     height: 100%;
 }
 h1 {
-    font-size: 24px;
+    font-size: 35px;
+    line-height: 42px;
     font-weight: bold;
-    color: black;
+    color: #333;
 }
 
 .label {
-    font-size: 12px;
-    color: #222;
+    font-size: 15px;
+    color: #333;
+    font-weight: normal;
     margin-top: auto;
 }
 
@@ -62,4 +78,21 @@ h1 {
 
 .navbar-item, .navbar-link {
     cursor: pointer;
+}
+
+.error {
+    font-size: 9px;
+    color: red;
+}
+
+.myloader {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 5001;
+    align-items: center;
+    justify-content: center;
 }
